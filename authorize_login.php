@@ -33,12 +33,12 @@ if( isset($_POST["username"]) && isset($_POST["password"]) ){
 	}else {
 		// get password Hash from database
 		if(isset($_POST["username"]) ){
-			$escapedusername = $mysqli->real_escape_string($username);
-			$query = "SELECT username, password FROM students WHERE username='".$escapedusername."';";
-			$result = $mysqli->query($query);
+			$escapedusername = $database->real_escape_string($username);
+			$query = "SELECT username, password FROM users WHERE username='".$escapedusername."';";
+			$result = $database->query($query);
 			while(   $record = $result->fetch_assoc() ){
-				$username = $result["username"];
-				const ACCEPTABLE_PASSWORD_HASH = $result["password"];
+				$username = $record["username"];
+				$ACCEPTABLE_PASSWORD_HASH = $record["password"];
 			}	
 		}
 	}
@@ -47,9 +47,9 @@ if( isset($_POST["username"]) && isset($_POST["password"]) ){
 
 	
 	//ensure password is acceptable
-	if( !password_verify($password, ACCEPTABLE_PASSWORD_HASH)){
+	if( !password_verify($password, $ACCEPTABLE_PASSWORD_HASH)){
 		//if password is no good, store an error message into a session
-		$_SESSION["errors"] .= "<p>Password is invalid (hint: it's supposed to be <em>bcit</em>)</p>";				
+		$_SESSION["errors"] .= "<p>Password is invalid</p>";				
 	}	
 }else{
 	//if the user did not use the form, 

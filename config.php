@@ -7,6 +7,7 @@ const TIMEOUT_SECONDS 		  = 30;
 
 //minimum requirements for username data
 const MINIMUM_LENGTH_USERNAME = 2;
+const MINIMUM_LENGTH_PASSWORD = 5;
 
 $cookieExpiryDuration = time()+60*60*24*7;
 

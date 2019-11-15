@@ -48,15 +48,26 @@ if( isset($_POST["username"]) && isset($_POST["password"]) ){
         $result = $database->query($query);
         if( $result->num_rows > 0){
             $_SESSION["errors"] .= "<p>Username is already in use. Please use a different username!</p>";		
-        }	
-    }
-
-    if ($password == $Confirmpassword){
-        echo "<p>your passwords match</p>";
-        
-    }else{
-        $_SESSION["errors"] .= "<p>your passwords do not match</p>";		
-    }
+        } else {
+			if ($password == $Confirmpassword){
+				if(strlen($password) >= MINIMUM_LENGTH_PASSWORD){
+				echo "<p>your passwords match uploading your hash to the server</p>";
+				$passwordHash = password_hash($password, PASSWORD_BCRYPT);
+				$query = "INSERT INTO users (username, password) VALUES ('$username', '$passwordHash');";
+				$result = $database->query($query);
+		
+				$numRowsAffected = $database->affected_rows;
+				echo "<p>$numRowsAffected row(s) where affected</p>";
+				header("location: index.php");
+				die();
+				}else{
+					$_SESSION["errors"] .= "<p>your password is too short</p>";		
+				}
+			}else{
+				$_SESSION["errors"] .= "<p>your passwords do not match</p>";		
+			}
+		}
+    } 
 }
 
 
